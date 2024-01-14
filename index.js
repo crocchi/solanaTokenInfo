@@ -7,7 +7,7 @@ const signalExit = require('signal-exit');
 const token = process.env.TOKEN
   //'6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
 
-const bot = new TelegramBot(token, { polling: 5000 });
+const bot = new TelegramBot(token, { polling: true });
 
 // Gestisci i comandi del bot
 bot.onText(/\/start/, (msg) => {
