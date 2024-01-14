@@ -15,29 +15,23 @@ bot.on('message', (msg) => {
   if (messageText === '/start') {
     bot.sendMessage(chatId, 'Welcome to the bot!');
   }
+  
+  if (messageText === 'ciao') {
+    bot.sendMessage(chatId, `ciao ${msg.chat.first_name}, come posso aiutarti?`);
+    console.log(msg);
+  }
+
+  if (messageText === 'token') {
+    bot.sendMessage(chatId, `ciao ${msg.chat.first_name}`);
+    console.log(msg);
+    getTokenInfo('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
+  }
+
+  
 });
 
 
 /*
-// Gestisci i comandi del bot
-bot.onText(/\/start/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Ciao! Sono il tuo primo bot su Telegram.');
-});
-
-bot.onText(/\/sayhello/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Hello! How are you doing?');
-});
-
-bot.onText(/\/token/, (msg) => {
-  const chatId = msg.chat.id;
-  console.log(msg);
-  bot.sendMessage(chatId, `Ciao ${msg.chat.first_name}, che bai truvann ogg?`);
-  getTokenInfo('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
-  
-});
-
 bot.onText(/\/exit/, (msg) => {
   const chatId = msg.chat.id;
   bot.sendMessage(chatId, 'Il bot si sta chiudendo...');
