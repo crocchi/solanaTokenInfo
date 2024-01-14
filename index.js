@@ -21,7 +21,16 @@ bot.onText(/\/token/, (msg) => {
   const chatId = msg.chat.id;
   console.log(msg);
   bot.sendMessage(chatId, `Ciao ${msg.chat.first_name}, che bai truvann ogg?`);
+  getTokenInfo('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
+  
+});
 
+bot.onText(/\/exit/, (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, 'Il bot si sta chiudendo...');
+  // Chiudi il bot
+  bot.stopPolling();
+  process.exit(0);
 });
 
 /*
