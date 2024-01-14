@@ -23,9 +23,17 @@ bot.on('message', (msg) => {
 
   if (messageText === 'token') {
     bot.sendMessage(chatId, `ciao ${msg.chat.first_name}`);
-    console.log(msg);
+    //console.log(msg);
     getTokenInfo('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
   }
+  
+  if (messageText === 'exit') {
+    bot.sendMessage(chatId, `ciao ${msg.chat.first_name}`);
+  bot.stopPolling();
+  process.exit(0);
+
+  }
+  
 
   
 });
