@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const { Token } = require('@solana/spl-token');
-const signalExit = require('signal-exit');
+//const signalExit = require('signal-exit');
 
 // Sostituisci 'TOKEN_DEL_TUO_BOT' con il token effettivo del tuo bot
 const token = '6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
@@ -12,7 +12,7 @@ bot.on('message', (msg) => {
   const chatId = msg.chat.id;
   const messageText = msg.text;
 
-  if (messageText === '/start') {
+  if (messageText === '/starter') {
     bot.sendMessage(chatId, 'Welcome to the bot!');
   }
   
