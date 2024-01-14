@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const { Token } = require('@solana/spl-token');
-const signalExit = require('signal-exit');
+//const signalExit = require('signal-exit');
 
 // Sostituisci 'TOKEN_DEL_TUO_BOT' con il token effettivo del tuo bot
 const token = process.env.TOKEN
