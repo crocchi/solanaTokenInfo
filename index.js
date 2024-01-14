@@ -1,12 +1,20 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const { Token } = require('@solana/spl-token');
-//const signalExit = require('signal-exit');
+const signalExit = require('signal-exit');
 
 // Sostituisci 'TOKEN_DEL_TUO_BOT' con il token effettivo del tuo bot
 const token = '6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
 
 const bot = new TelegramBot(token, { polling: true });
+
+// Gestione della terminazione del processo
+signalExit((code, signal) => {
+  console.log(`Il processo è stato terminato con il codice ${code} e il segnale ${signal}`);
+  // Pulisci risorse, salva lo stato, ecc.
+  bot.stopPolling();
+  process.exit(0);
+});
 
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
@@ -48,16 +56,6 @@ bot.onText(/\/exit/, (msg) => {
   process.exit(0);
 });
 
-/*
-// Gestione della terminazione del processo
-signalExit((code, signal) => {
-  console.log(`Il processo è stato terminato con il codice ${code} e il segnale ${signal}`);
-  // Pulisci risorse, salva lo stato, ecc.
-  bot.stopPolling();
-  process.exit(0);
-});
-*/
-/*
 {
   message_id: 19,
   from: {
