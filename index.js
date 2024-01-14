@@ -1,7 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
+const { Connection, PublicKey } = require('@solana/web3.js');
+const { Token } = require('@solana/spl-token');
 
 // Sostituisci 'TOKEN_DEL_TUO_BOT' con il token effettivo del tuo bot
-const token = 'TOKEN_DEL_TUO_BOT';
+const token = '6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
 const bot = new TelegramBot(token, { polling: true });
 
 // Gestisci i comandi del bot
