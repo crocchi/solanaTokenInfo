@@ -65,7 +65,7 @@ signalExit((code, signal) => {
   bot.stopPolling();
   process.exit(0);
 });
-
+console.log('BOT TELEGRAM...AVVIATO')
 async function getTokenInfo(tokenAddress) {
   // Connessione alla rete Solana
   const connection = new Connection('https://api.mainnet-beta.solana.com');
