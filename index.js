@@ -42,7 +42,11 @@ bot.on('message', (msg) => {
 
   }
   
+bot.onText(/\/start/, (msg) => {
 
+bot.sendMessage(msg.chat.id, `Benvenuto ${msg.chat.first_name}!`);
+
+});
   
 });
 
