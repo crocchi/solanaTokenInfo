@@ -1,10 +1,13 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const { Token } = require('@solana/spl-token');
+const signalExit = require('signal-exit');
 
 // Sostituisci 'TOKEN_DEL_TUO_BOT' con il token effettivo del tuo bot
-const token = '6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
-const bot = new TelegramBot(token, { polling: true });
+const token = process.env.TOKEN
+  //'6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
+
+const bot = new TelegramBot(token, { polling: 5000 });
 
 // Gestisci i comandi del bot
 bot.onText(/\/start/, (msg) => {
@@ -54,6 +57,14 @@ bot.onText(/\/exit/, (msg) => {
   entities: [ { offset: 0, length: 6, type: 'bot_command' } ]
 }
 */
+
+// Gestione della terminazione del processo
+signalExit((code, signal) => {
+  console.log(`Il processo è stato terminato con il codice ${code} e il segnale ${signal}`);
+  // Pulisci risorse, salva lo stato, ecc.
+  bot.stopPolling();
+  process.exit(0);
+});
 
 async function getTokenInfo(tokenAddress) {
   // Connessione alla rete Solana
