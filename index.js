@@ -8,6 +8,17 @@ const token = '6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
 
 const bot = new TelegramBot(token, { polling: true });
 
+bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+  const messageText = msg.text;
+
+  if (messageText === '/start') {
+    bot.sendMessage(chatId, 'Welcome to the bot!');
+  }
+});
+
+
+/*
 // Gestisci i comandi del bot
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
