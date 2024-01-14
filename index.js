@@ -20,8 +20,31 @@ bot.onText(/\/sayhello/, (msg) => {
 bot.onText(/\/token/, (msg) => {
   const chatId = msg.chat.id;
   console.log(msg);
-  bot.sendMessage(chatId, 'TOKEN INFO...');
+  bot.sendMessage(chatId, `Ciao ${msg.chat.first_name}, che bai truvann ogg?`);
+
 });
+
+/*
+{
+  message_id: 19,
+  from: {
+    id: 585151280,
+    is_bot: false,
+    first_name: 'Crocchi',
+    username: 'Crocchii',
+    language_code: 'it'
+  },
+  chat: {
+    id: 585151280,
+    first_name: 'Crocchi',
+    username: 'Crocchii',
+    type: 'private'
+  },
+  date: 1705257746,
+  text: '/token',
+  entities: [ { offset: 0, length: 6, type: 'bot_command' } ]
+}
+*/
 
 async function getTokenInfo(tokenAddress) {
   // Connessione alla rete Solana
