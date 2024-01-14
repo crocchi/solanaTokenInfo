@@ -9,14 +9,6 @@ const token = process.env.TOKEN
 
 const bot = new TelegramBot(token, { polling: true });
 
-// Gestione della terminazione del processo
-signalExit((code, signal) => {
-  console.log(`Il processo è stato terminato con il codice ${code} e il segnale ${signal}`);
-  // Pulisci risorse, salva lo stato, ecc.
-  bot.stopPolling();
-  process.exit(0);
-});
-
 // Gestisci i comandi del bot
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
@@ -40,6 +32,15 @@ bot.onText(/\/exit/, (msg) => {
   const chatId = msg.chat.id;
   bot.sendMessage(chatId, 'Il bot si sta chiudendo...');
   // Chiudi il bot
+  bot.stopPolling();
+  process.exit(0);
+});
+
+
+// Gestione della terminazione del processo
+signalExit((code, signal) => {
+  console.log(`Il processo è stato terminato con il codice ${code} e il segnale ${signal}`);
+  // Pulisci risorse, salva lo stato, ecc.
   bot.stopPolling();
   process.exit(0);
 });
