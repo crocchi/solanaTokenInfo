@@ -60,6 +60,12 @@ bot.onText(/\/exit/, (msg) => {
   process.exit(0);
 });
 
+bot.onText(/\/sendpic/, (msg) => {
+
+bot.sendPhoto(msg.chat.id,"https://www.somesite.com/image.jpg",{caption : "Here we go ! \nThis is just a caption "} );
+
+});
+
 {
   message_id: 19,
   from: {
