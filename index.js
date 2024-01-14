@@ -4,7 +4,7 @@ const { Token } = require('@solana/spl-token');
 //const signalExit = require('signal-exit');
 
 // Sostituisci 'TOKEN_DEL_TUO_BOT' con il token effettivo del tuo bot
-const token = process.env.TOKEN || '6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
+const token = '6813572864:AAGyTZVfMxwqvTkexOSiW9dAM2LKuRzNhgE';
 
 const bot = new TelegramBot(token, { polling: true });
 
