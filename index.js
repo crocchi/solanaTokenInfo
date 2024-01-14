@@ -36,7 +36,7 @@ bot.onText(/\/exit/, (msg) => {
   process.exit(0);
 });
 
-
+/*
 // Gestione della terminazione del processo
 signalExit((code, signal) => {
   console.log(`Il processo è stato terminato con il codice ${code} e il segnale ${signal}`);
@@ -44,7 +44,7 @@ signalExit((code, signal) => {
   bot.stopPolling();
   process.exit(0);
 });
-
+*/
 /*
 {
   message_id: 19,
