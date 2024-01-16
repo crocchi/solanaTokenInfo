@@ -26,7 +26,7 @@ bot.on('message', async (msg) => {
    // bot.sendMessage(chatId, 'Welcome to the bot!');
  // }
 
-  var bye = "esci";
+  var bye = "esci0";
 if (messageText.toString().toLowerCase().includes(bye)) {
     bot.sendMessage(chatId, `Ciao ${msg.chat.first_name}! Alla prox..` );
    await bot.stopPolling();
