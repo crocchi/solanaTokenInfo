@@ -1,6 +1,48 @@
 const TelegramBot = require('node-telegram-bot-api');
-//const { Connection, PublicKey } = require('@solana/web3.js');
-//const { Token } = require('@solana/spl-token');
+const { Connection, PublicKey, Keypair } = require('@solana/web3.js');
+const { Token, TOKEN_PROGRAM_ID } = require('@solana/spl-token');
+
+const solanaNetwork = 'https://api.mainnet-beta.solana.com';
+const connection = new Connection(solanaNetwork, 'recent');
+const newWallet = Keypair.generate();
+console.log('Nuovo portafoglio creato:');
+// Ottieni l'indirizzo del portafoglio
+//const walletAddress = newWallet.publicKey.toString();
+//console.log(walletAddress)
+//6fvys6PkSCgZcrDCCkYp56BjLMKZ41ySZK6qtgzX49Hg
+//lola token
+//console.log(newWallet);
+
+//OTTIENI INFORMAZIONI DI UN TOKEN
+let tokenMintAddress='6fvys6PkSCgZcrDCCkYp56BjLMKZ41ySZK6qtgzX49Hg'// indirizzo token
+
+console.log(Token)
+
+async function getSolanaToken(tokenAddress) {
+    try {
+            
+    
+      const mintPublicKey = new PublicKey(tokenMintAddress);
+      // GET TOKEN SUPPLY
+
+      const mintInfo = await connection.getTokenSupply(mintPublicKey);
+      const tokenInfo = await connection.getAccountInfo(mintPublicKey);
+      console.log('Token TotalSupply:', mintInfo.value.uiAmountString);
+      console.log(tokenInfo.data);
+      // Ottieni informazioni sul token
+
+  
+  
+      // Puoi anche ottenere altre informazioni sul token, ad esempio account associati, bilancio, ecc.
+      // Esempio:
+      // const tokenAccountInfo = await token.getAccountInfo(new PublicKey(tokenAccountAddress));
+      // console.log('Token Account Info:', tokenAccountInfo);
+    } catch (error) {
+      console.error('Errore durante la ricerca delle informazioni sul token:', error);
+    }
+  }
+  
+  getSolanaToken(tokenMintAddress)
 //53xconst { signalExit } = require('signal-exit');
 
 // Sostituisci 'TOKEN_DEL_TUO_BOT' con il token effettivo del tuo bot
@@ -11,12 +53,17 @@ const bot = new TelegramBot(tokenApi, { polling: true } );
 // Mappa per tenere traccia dello stato di ogni utente
 const userStates = new Map();
 
-let rete, indirizzo,chatId;
+let rete, indirizzo,chatId,timerAlertN=[];
 
 bot.on('message', async (msg) => {
   chatId = msg.chat.id;
   const userId = msg.from.id;
   const messageText = msg.text;
+  if(messageText===undefined){
+    
+    bot.sendMessage(chatId, `Non ho capito una mazza di quello che hai scritto o inviato...` );
+    return
+}
   console.log(msg)
 
   // Verifica lo stato dell'utente
@@ -26,7 +73,7 @@ bot.on('message', async (msg) => {
    // bot.sendMessage(chatId, 'Welcome to the bot!');
  // }
 
-  var bye = "esci0";
+  var bye = "esci00";
 if (messageText.toString().toLowerCase().includes(bye)) {
     bot.sendMessage(chatId, `Ciao ${msg.chat.first_name}! Alla prox..` );
    await bot.stopPolling();
@@ -54,7 +101,14 @@ if (messageText.includes('/token')) {
    //let data= await getTokenInfo('EoXn2uKYCx8e8vV84Rn83UuTjBerZwmgQBB9VqP8NDYM');//
    let infoToken= await getTokenInfo(indirizzo,rete);
    //console.log(infoToken)
-  
+   
+   // CALCOLA LA PERCENTUALE DEL PREZZO ----- 5m - 1h -24h
+   /*
+   let h1= (infoToken.price - infoToken.price1h) / infoToken.price1h * 100;
+   let h5m= (infoToken.price - infoToken.price5m) / infoToken.price5m * 100;
+   let h6h= (infoToken.price - infoToken.price6h) / infoToken.price6h * 100;
+   let h24= (infoToken.price - infoToken.price24h) / infoToken.price24h * 100;
+*/
 
    //bot.sendMessage(msg.chat.id,"<b>bold</b> \n <i>italic</i> \n <em>italic with em</em> \n <a href=\"http://www.example.com/\">inline URL</a> \n <code>inline fixed-width code</code> \n <pre>pre-formatted fixed-width code block</pre>" ,{parse_mode : "HTML"});
 
@@ -78,11 +132,22 @@ if (messageText.includes('/token')) {
    bot.sendMessage(chatId, ` 🆙 Creato: [ ${infoToken.creationTime} ]`);
 }
 
-bot.sendMessage(msg.chat.id, `Puoi impostare un avviso.. `, {
+const opzioniPulsanti = {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: 'IMPOSTA AVVISO', callback_data: 'avviso' }
+        ]
+       
+      ]
+    }
+  };
+bot.sendMessage(msg.chat.id, `Puoi impostare un avviso.. Seleziona un'opzione:' `, opzioniPulsanti);
+/*{
     "reply_markup": {
-        "keyboard": [["Imposta avviso"]]
+        " inline_keyboard": [["Imposta avviso"]]
         }
-    });
+    });*/
   }
 
 
@@ -95,9 +160,16 @@ bot.sendMessage(msg.chat.id, `Puoi impostare un avviso.. `, {
         case 1:
             //hai impostato il token..andiamo avanti
            // const nome = userInput;
-            bot.sendMessage(chatId, `Stai per impostare un avviso sul token #${infoToke.symbol}...`);   
-            bot.sendMessage(chatId, `Prezzo:${infoToke.price}...`);
-            bot.sendMessage(chatId, `es: imposta avviso ${infoToke.price*2} `);
+            bot.sendMessage(chatId, `⚙ Stai per impostare un avviso sul token #${infoToke.symbol}...`);   
+            bot.sendMessage(chatId, `💰 Prezzo:$ ${(infoToke.price).toFixed(12)} 💰`);
+            bot.sendMessage(chatId, `es: imposta avviso ${(infoToke.price*2.0).toFixed(10)}` ,{
+                "reply_markup": {
+                    "keyboard": [[`Imposta avviso ${(infoToke.price*1.1).toFixed(10)} `],
+                       [`Imposta avviso ${(infoToke.price*1.25).toFixed(10)} `],
+                       [`Imposta avviso ${(infoToke.price*1.5).toFixed(10)} `],
+                    ]
+                    }
+                });
             // Aggiorna lo stato dell'utente
             userStates.set(userId, 2);
             break;
@@ -107,10 +179,15 @@ bot.sendMessage(msg.chat.id, `Puoi impostare un avviso.. `, {
                    // Estrai l'input dall'utente
             const userInput = messageText.replace('Imposta avviso ', '').trim();
             const allert = userInput//.split(/\s+/);
-              
-                bot.sendMessage(chatId, `⏱⏱ Avviso Impostato sul Token #${infoToke.symbol} - $${allert} ⏱⏱ `);
+            const opzioniP = {
+                reply_markup: {
+                  remove_keyboard: true
+                }
+              }; 
+            
+                bot.sendMessage(chatId, `⏱⏱ Avviso Impostato sul Token #${infoToke.symbol} - $${allert} ⏱⏱ `,opzioniP );
                 // Resetta lo stato dell'utente
-                notifica(rete,infoToke.address,allert)
+                notifica(rete,infoToke.address,allert,infoToke.name || infoToke.symbol )
                 userStates.delete(userId);
                 break;
         
@@ -127,6 +204,21 @@ bot.sendMessage(msg.chat.id, `Puoi impostare un avviso.. `, {
 
 
 })//fine bot.on message
+
+bot.on('callback_query', (query) => {
+    const chatId = query.message.chat.id;
+    const pulsantePremuto = query.data;
+    console.log(pulsantePremuto);
+  if(pulsantePremuto==='avviso'){
+    bot.sendMessage(chatId, `Hai premuto il pulsante: ${pulsantePremuto}`,{
+        "reply_markup": {
+            "keyboard": [[`Imposta avviso`]]
+            }
+        });
+  }
+    // Puoi gestire l'azione in base al pulsante premuto
+   
+  });
 
 bot.onText(/\/start/, (msg) => {
 
@@ -147,11 +239,25 @@ bot.sendMessage(msg.chat.id, `Benvenuto ${msg.chat.first_name }`, {
   */  
 });
 
-bot.onText(/\/exit/, (msg) => {
+bot.onText(/\/avviso/, (msg) => {
 
-    bot.sendMessage(msg.chat.id, `Ciao ${msg.chat.first_name}!Alla prox..` );
-    bot.stopPolling();
-    process.exit(0);
+    timerManager.checkActiveTimers((x) => {
+        
+       // console.log("sei dentro checkactive")
+    //  CONTROLLA I TIMER ATTIVI 
+        //console.log(bot)
+        
+        
+        bot.sendMessage(msg.chat.id, `
+        ⏱ ⏱ Avvisi Impostati ⏱ ⏱ \n
+         🛎 🛎 🛎 🛎 \n
+          ${x}
+        ` );
+        //bot.sendMessage(msg.chat.id, `Avvisi Impostati: ${this.activeTimers.join(', ')} ` );
+   
+    }
+    )
+    
     
 });
 
@@ -465,19 +571,18 @@ function scientificToBinary(num) {
   }
   
 let timer;
-let tempo=60000 // 1min - timer loop controllo prezzo
-let workTimerNotifica=150000 // tempo di attività della notifica
+let tempo=2*60000; // 2min - timer loop controllo prezzo
+let workTimerNotifica=60*60000;// 60min tempo di attività della notifica
 
-const notifica = (chainId,address,priceSet) =>{
 
-   
-      timer = setInterval(() => {
+const notifica = (chainId,address,priceSet,token) =>{
 
-        // Operazioni da eseguire ogni intervallo di tempo
-        console.log("Operazioni eseguite!");
-        let urlBuild= `http://open-api.dextools.io/free/v2/token/${chainId}/${address}/price`;
-    let tokenInfoTmp=[];
-        //console.log(urlBuild)
+    let urlBuild= `http://open-api.dextools.io/free/v2/token/${chainId}/${address}/price`;
+    
+    timerManager.startTimer(`${token}`, tempo, () => {
+        
+        console.log(`Controllo Prezzo Notifica [${token}]`);
+       
     fetch(urlBuild,optionsApi)
     .then(response => response.json())
     .then(response => {
@@ -485,31 +590,101 @@ const notifica = (chainId,address,priceSet) =>{
         console.log(priceSet)
         if(response.data.price > priceSet){
             bot.sendMessage(chatId, `
-            Prezzo SUperato!!!!\n
+            ⏱⏱ Prezzo SUperato!  ⏱⏱ \n
+            Notifica:  ${token}
             Prezzo Ora:${response.data.price} \n
             Prezzo Impostato: ${priceSet}
             `);
+            // FERMA AVVISO NOTI...FICA
+            timerManager.stopTimer(`${token}`)
+          
+            bot.sendMessage(chatId, `Notifica Disattivata`);
+
         }
-        bot.sendMessage(chatId, `
-        Prezzo Live:${response.data.price} \n
-        Prezzo Impostato: ${priceSet}
-        `);
+
     })
-    .catch(err => console.error(err));
-
+    .catch(err =>{
+        bot.sendMessage(chatId, `Errore Impostazione Notifica`);
+        console.log(err)
+    });
     
-        // Puoi inserire qui le operazioni che desideri eseguire
-    }, tempo);
-    
 
+      });
+
+      
     // Per fermare il timer dopo un certo periodo di tempo (ad esempio, dopo 30 secondi)
-setTimeout(() => {
-    clearInterval(timer); // Interrompe il timer
-    console.log("Timer fermato dopo 30 secondi.");
-    bot.sendMessage(chatId, `Notifica Disattivata`)
+setTimeout((token) => {
+    timerManager.stopTimer(`${token}`)
+    console.log(` Timer fermato - ${token}`);
+    bot.sendMessage(chatId, `Notifica Disattivata: # ${token} - timer Off ${workTimerNotifica}`);
 
 },workTimerNotifica);
 
 
   }
+
+
+  const timerManager = {
+    timers: [],
+    activeTimers: [],
+  
+    startTimer: function(timerName, duration, callback) {
+        console.log(`Timer [${timerName}] is Running...`);
+      const newTimer = setInterval(() => {
+        
+        if (callback) {
+          callback();
+        }
+      }, duration);
+  
+      this.timers.push({ name: timerName, timer: newTimer });
+      this.activeTimers.push(timerName);
+    },
+  
+    stopTimer: function(timerName) {
+      const timerToStop = this.timers.find(timer => timer.name === timerName);
+  
+      if (timerToStop) {
+        clearInterval(timerToStop.timer);
+        this.timers = this.timers.filter(timer => timer.name !== timerName);
+        this.activeTimers = this.activeTimers.filter(timer => timer !== timerName);
+        console.log(`${timerName} stopped.`);
+      }
+    },
+  
+    stopAllTimers: function() {
+      this.timers.forEach(timer => clearInterval(timer.timer));
+      this.timers = [];
+      this.activeTimers = [];
+      console.log('All timers stopped.');
+    },
+  
+    checkActiveTimers: function(callback) {
+       
+      if (this.activeTimers.length > 0) {
+        console.log(`Active timers: ${this.activeTimers.join(', ')}`);
+        if(callback){ 
+            callback(`${this.activeTimers.join(' \n ')}`)
+         }
+      } else {
+        console.log('No active timers at the moment.');
+      }
+    }
+  };
+  
+  /*
+  // Start two timers simultaneously
+  timerManager.startTimer('timer1', 5000, () => {
+    console.log('Callback for timer1!');
+  });
+  
+  timerManager.startTimer('timer2', 10000, () => {
+    console.log('Callback for timer2!');
+  });
+  
+  // Check which timers are active after 7 seconds
+  setInterval(() => {
+    timerManager.checkActiveTimers();
+  }, 50000);
+  */
   
