@@ -11,7 +11,8 @@ cors_proxy.createServer({
     removeHeaders: ['cookie', 'cookie2'],
     handleInitialRequest: function(req, res, url) {
         if(req.url.includes('streamingcommunity')){
-            delete req.headers['x-requested-with','origin'];
+            delete req.headers['x-requested-with'];
+            delete req.headers['origin'];
            // req.headers['origin'] = 'streamingcommunity.lu';
         }
     }
