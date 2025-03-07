@@ -12,7 +12,7 @@ cors_proxy.createServer({
     handleInitialRequest: function(req, res, url) {
         if(req.url.includes('streamingcommunity')){
             delete req.headers['x-requested-with'];
-            req.headers['origin'] = 'streamingcommunity.lu';
+            //req.headers['origin'] = 'streamingcommunity.lu';
         }
     }
 }).listen(port, host, function() {
