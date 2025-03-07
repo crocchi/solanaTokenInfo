@@ -14,6 +14,7 @@ cors_proxy.createServer({
             console.log("cors streamingcommunity");
             return [];
         }
+        console.log('normale request')
         return ['origin', 'x-requested-with'];
     }
 
