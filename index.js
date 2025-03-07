@@ -6,17 +6,17 @@ var port = process.env.PORT || 8080;
 
 var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
-    originWhitelist: [], 
-    requireHeader: ['origin', 'x-requested-with'],
+    originWhitelist: [], // Allow all origins
     removeHeaders: ['cookie', 'cookie2'],
-    handleProxyRequest: function(req, res, url) {
+
+    requireHeader: (req) => {
         if(req.url.includes('streamingcommunity')){
-            delete req.headers['x-requested-with'];
-            delete req.headers['origin'];
-           // req.headers['origin'] = 'streamingcommunity.lu';
-           console.log("cors bypass");
+            console.log("cors streamingcommunity");
+            return [];
         }
+        return ['origin', 'x-requested-with'];
     }
+
 }).listen(port, host, function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
