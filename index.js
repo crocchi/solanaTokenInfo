@@ -18,8 +18,8 @@ cors_proxy.createServer({
     },
     setHeaders: function(req, res, proxyReq) {
         // Set the Referer or Origin header to a specific site
-        proxyReq.setHeader('Referer', 'https://www.specificsite.com');
-        proxyReq.setHeader('Origin', 'https://www.specificsite.com');
+        proxyReq.setHeader('Referer', 'https://streamingcommunity.lu');
+        proxyReq.setHeader('Origin', 'https://scrapercb01.onrender.com/');
     },
     // Remove 'X-Frame-Options' header from the response
     onHeadersReceived: function(req, res, proxyRes) {
