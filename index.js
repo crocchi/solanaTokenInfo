@@ -9,11 +9,12 @@ cors_proxy.createServer({
     originWhitelist: [], 
     requireHeader: ['origin', 'x-requested-with'],
     removeHeaders: ['cookie', 'cookie2'],
-    handleInitialRequest: function(req, res, url) {
+    handleProxyRequest: function(req, res, url) {
         if(req.url.includes('streamingcommunity')){
             delete req.headers['x-requested-with'];
             delete req.headers['origin'];
            // req.headers['origin'] = 'streamingcommunity.lu';
+           console.log("cors bypass");
         }
     }
 }).listen(port, host, function() {
