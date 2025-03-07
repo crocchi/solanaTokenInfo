@@ -7,7 +7,7 @@ var port = process.env.PORT || 8080;
 var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
     originWhitelist: [], 
-    requireHeader: ['origin', 'x-requested-with'],
+   // requireHeader: ['origin', 'x-requested-with'],
     removeHeaders: ['cookie', 'cookie2'],
     handleInitialRequest: function(req, res, url) {
         if(req.url.includes('/cro')){
